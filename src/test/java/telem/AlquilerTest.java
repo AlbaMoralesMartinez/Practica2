@@ -47,6 +47,22 @@ class AlquilerTest {
         Alquiler temporadaAlta = new Alquiler(vehiculo, cliente, inicio, fin, new TarifaTemporadaAlta());
 
         assertEquals(150, tarifaNormal.calcularPrecioAlquiler(inicio, fin));
-        assertEquals(225, temporadaAlta.calcularPrecioAlquiler(inicio, fin));
+        assertEquals(300, temporadaAlta.calcularPrecioAlquiler(inicio, fin));
+    }
+
+    @Test
+    void aplicaDescuentosDeClienteFrecuenteYOferta() {
+        Vehiculo vehiculo = new Motocicleta("1111AAA", Categoria.NORMAL, 2020, 125);
+        Cliente cliente = new Cliente("Eva López", "12345678A");
+        LocalDate inicio = LocalDate.of(2025, 7, 1);
+        LocalDate finCuatroDias = inicio.plusDays(3);
+        LocalDate finOchoDias = inicio.plusDays(7);
+
+        Alquiler clienteFrecuente = new Alquiler(vehiculo, cliente, inicio, finCuatroDias,
+                new TarifaClienteFrecuente());
+        Alquiler oferta = new Alquiler(vehiculo, cliente, inicio, finOchoDias, new TarifaOferta());
+
+        assertEquals(150, clienteFrecuente.calcularPrecioAlquiler(inicio, finCuatroDias));
+        assertEquals(252, oferta.calcularPrecioAlquiler(inicio, finOchoDias));
     }
 }

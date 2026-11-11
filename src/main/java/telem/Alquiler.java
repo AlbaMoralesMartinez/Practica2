@@ -2,6 +2,7 @@ package telem;
 import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 /**
  * Modela un alquiler de un vehículo por parte de un cliente, con fechas de inicio y fin.
@@ -14,6 +15,7 @@ public class Alquiler {
     private Cliente cliente;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
+    private ICalculadorPrecio calculadorPrecio;
 
     private static Alquiler[] alquileres = new Alquiler[1000];
 
@@ -21,10 +23,16 @@ public class Alquiler {
     private static int contadorAlquileres = 0;
 
     public Alquiler(Vehiculo vehiculo, Cliente cliente, LocalDate fechaInicio, LocalDate fechaFin) {
+        this(vehiculo, cliente, fechaInicio, fechaFin, new TarifaNormal());
+    }
+
+    public Alquiler(Vehiculo vehiculo, Cliente cliente, LocalDate fechaInicio, LocalDate fechaFin,
+            ICalculadorPrecio calculadorPrecio) {
         this.vehiculo = vehiculo;
         this.cliente = cliente;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.calculadorPrecio = Objects.requireNonNull(calculadorPrecio);
     }
 
     public static Alquiler[] obtenerAlquileres() {
@@ -56,9 +64,13 @@ public class Alquiler {
         return fechaFin;
     }
 
+    public void setCalculadorPrecio(ICalculadorPrecio calculadorPrecio) {
+        this.calculadorPrecio = Objects.requireNonNull(calculadorPrecio);
+    }
+
     public int calcularPrecioAlquiler(LocalDate fechaInicio, LocalDate fechaFin) {
         int dias = (int) ChronoUnit.DAYS.between(fechaInicio, fechaFin) + 1;
-        return dias * PRECIO_BASE;
+        return calculadorPrecio.calcularPrecio(dias, vehiculo.getPrecioBase());
     } 
     
 
