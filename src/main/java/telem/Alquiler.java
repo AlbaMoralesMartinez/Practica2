@@ -60,6 +60,7 @@ public class Alquiler {
         int dias = (int) ChronoUnit.DAYS.between(fechaInicio, fechaFin) + 1;
         return dias * PRECIO_BASE;
     } 
+    
 
 
 
