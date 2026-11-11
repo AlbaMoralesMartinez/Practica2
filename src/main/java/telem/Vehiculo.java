@@ -45,11 +45,18 @@ public abstract class Vehiculo {
 
    public abstract int getPrecioBase(); 
 
-
+    public Vehiculo(String jsonString) {
+         org.json.JSONObject json = new org.json.JSONObject(jsonString);
+         this.matricula = json.getString("matricula");
+         this.categoria = Categoria.valueOf(json.getString("categoria"));
+         this.annio = json.getInt("annio");
+         this.disponible = json.getBoolean("disponible");
+    }
 
     @Override 
     public String toString() {
         return new JSONObject(this).toString();
     }
+   
 
 }
